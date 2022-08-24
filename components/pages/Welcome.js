@@ -38,6 +38,8 @@ const Welcome = () => {
     authctx.token=""
  }
 
+
+
   return (
     <>
                   <Routes>
@@ -46,17 +48,14 @@ const Welcome = () => {
                   </Routes>
 
                  { !islogout && 
-            <div className='head'>
+                      <div className='head'>
                   <div>Welcome To Expense Tracker</div>
                   <button onClick={logout}>Logout</button>
                   <div>Your Profile is  64% COMPLETE <button onClick={profilecompletehandler}>Complete Now</button></div>
                   { isclicked && <Profilepage />}
-                  
                    <div><button onClick={verifyemail}>Verify Email</button></div>
-               
-
-            </div>
-}
+                  </div>
+                  }
     </>
   )
 }

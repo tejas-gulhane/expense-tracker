@@ -2,7 +2,8 @@ import { useState, useRef } from 'react';
 import { useContext  } from 'react';
 import AuthContext from '../store/auth-context';
 import classes from './AuthForm.module.css';
-// import {  useNavigationType } from 'react-router-dom';
+import {  Navigate, NavLink } from 'react-router-dom';
+import ForgotPassword from '../pages/ForgotPassword';
 
 const AuthForm = () => {
 
@@ -14,6 +15,7 @@ const AuthForm = () => {
 
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [isforgot,setisforgot] =useState(false);
 
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
@@ -46,6 +48,8 @@ const AuthForm = () => {
                   ctx.token=data.idToken
                   // history.replace('./');
                   console.log("hi");
+                <Navigate to={"/homepage"} />
+
                   // ctx.isLoggedIn=true;
                 })
               }
@@ -87,6 +91,9 @@ AIzaSyDJzFGMehDL_Sv8YBjxCcs1Ox2VjgMBPG4`, {
       })
     }
   }
+  const forgotpass =() =>{
+    setisforgot(true);
+ }
 
   return (
     <section className={classes.auth}>
@@ -110,8 +117,16 @@ AIzaSyDJzFGMehDL_Sv8YBjxCcs1Ox2VjgMBPG4`, {
           >
             {isLogin ? 'Create new account' : 'Login with existing account'}
           </button>
+          
+          
+
+          <div>
+
+          </div>
         </div>
       </form>
+      <button onClick={forgotpass}>Forgotpassword</button>
+          { isforgot && <Navigate to={"/forgot"} />}
     </section>
   );
 };
