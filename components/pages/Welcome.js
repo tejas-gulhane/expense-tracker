@@ -1,13 +1,35 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useState } from 'react'
 import Profilepage from './Profilepage'
+import AuthContext from '../store/auth-context'
 
 
 const Welcome = () => {
-    const [isclicked,setisclicked] =useState(false)
+    const authctx =useContext(AuthContext);
+
+    const [isclicked,setisclicked] =useState(false);
+    // const [isclickedverify,setisclickedverify] =useState(false);
+
 
  const profilecompletehandler = () =>{
     setisclicked(true)
+ }
+
+ const verifyemail = () =>{
+    // setisclickedverify(true)
+
+    fetch(`https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=
+    AIzaSyDJzFGMehDL_Sv8YBjxCcs1Ox2VjgMBPG4`
+    ,{
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          idToken: authctx.token,
+          requestType:"VERIFY_EMAIL"
+        }),
+    }).then(res => console.log(res))
  }
 
   return (
@@ -16,6 +38,10 @@ const Welcome = () => {
                   <div>Welcome To Expense Tracker</div>
                   <div>Your Profile is  64% COMPLETE <button onClick={profilecompletehandler}>Complete Now</button></div>
                   { isclicked && <Profilepage />}
+                 
+                   <div><button onClick={verifyemail}>Verify Email</button></div>
+               
+
             </div>
     </>
   )
