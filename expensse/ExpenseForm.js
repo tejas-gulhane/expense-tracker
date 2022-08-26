@@ -1,19 +1,31 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import classes from "./ExpenseForm.module.css";
 
 const ExpenseForm = (props) => {
+  const [expenses, setExpenses] = useState({});
 
-  const [expenses, setExpenses] = useState([]);
+  useEffect(() => {
+    fetch(
+      `https://expense-tracker-bd2b2-default-rtdb.firebaseio.com/expenses.json`,
+      {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setExpenses(data);
+      });
+  }, []);
 
   const formSubmitHandler = (event) => {
     event.preventDefault();
     const cost = event.target.elements["costInp"].value;
     const catagory = event.target.elements["catagoryInp"].value;
     const description = event.target.elements["descInp"].value;
-
-    if (!catagory){
-        alert("Please select catagory");
-    } 
+    if (!catagory) alert("Please select catagory");
     else {
       const expense = {
         id: Math.random(),
@@ -22,11 +34,34 @@ const ExpenseForm = (props) => {
         description: description,
       };
 
-      setExpenses((old) => [...old, expense]);
-      console.log(cost, catagory, description);
-      event.target.elements["costInp"].value = "";
-      event.target.elements["catagoryInp"].value = "";
-      event.target.elements["descInp"].value = "";
+      fetch(
+        `https://expense-tracker-bd2b2-default-rtdb.firebaseio.com/expenses.json`,
+        {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(expense),
+        }
+      )
+      .then((res) => res.json())
+      .then((resData) => {
+        if (!resData.error) {
+          fetch(
+            `https://expense-tracker-bd2b2-default-rtdb.firebaseio.com/expenses.json`
+          )
+            .then((res) => res.json())
+            .then((data) => {
+              console.log(data);
+              setExpenses(data);
+              event.target.elements["costInp"].value = "";
+              event.target.elements["catagoryInp"].value = "";
+              event.target.elements["descInp"].value = "";
+            });
+        } else {
+          console.log(resData.error);
+        }
+      });
     }
   };
 
@@ -56,13 +91,17 @@ const ExpenseForm = (props) => {
       </form>
       <div>
         <ul>
-          {expenses.map((item) => (
+          {/* {expenses.map((item) => (
             <li key={item.id}>{`cost: ${item.cost}\tcatagory: ${item.catagory}\tdescription: ${item.description}`}</li>
+          ))} */}
+          {Object.keys(expenses).map((item) => (
+            <li key={item}>
+              {`cost: ${expenses[item].cost}\tcatagory: ${expenses[item].catagory}\tdescription: ${expenses[item].description}`}
+            </li>
           ))}
         </ul>
       </div>
     </Fragment>
   );
 };
-
 export default ExpenseForm;
