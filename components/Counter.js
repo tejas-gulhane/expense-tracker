@@ -1,40 +1,42 @@
 import classes from './Counter.module.css';
-import { useSelector ,useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { counterActions } from '../store/index';
 
 const Counter = () => {
-  const dispatch =useDispatch()
-  const counter = useSelector(state=>state.counter);
+  const dispatch = useDispatch();
+  const counter = useSelector(state=>state.counter.counter);
+  const show = useSelector(state => state.counter.showCounter);
 
-  const incr = () =>{
-      dispatch( {type :"increment"})
+  // now we can change increment value
+  const increaseByHandler = () => {
+    dispatch(counterActions.increaseBy(10))
+  };
+  const decreaseByHandler = () => {
+    dispatch(counterActions.decreaseBy(10))
   }
 
-  const decr = () =>{
-    dispatch( {type :"decrement"})
-  }
+  const incrementHandler = () => {
+    dispatch(counterActions.increment());
+  };
+  const decrementHandler = () => {
+    dispatch(counterActions.decrement());
+  };
 
-  const incr5 = () =>{
-    dispatch( {type :"incrementBy5"})
-}
-
-const decr5 = () =>{
-  dispatch( {type :"decrementBy5"})
-}
-
-
-  const toggleCounterHandler = () => {};
+  const toggleCounterHandler = () => {
+    dispatch(counterActions.toggleCounter());
+  };
 
   return (
     <main className={classes.counter}>
       <h1>Redux Counter</h1>
-      <div className={classes.value}>{counter}</div>
+      {show && <div className={classes.value}>{counter}</div>}
       <div>
-        <button onClick={incr}>Increment</button>
-        <button onClick={decr}>Decrement</button> 
+        <button onClick={incrementHandler}>Increment</button>
+        <button onClick={decrementHandler}>Decrement</button>
       </div>
-      <div>  
-        <button onClick={incr5}>Increment- BY -5</button>
-        <button onClick={decr5}>Decrement- BY -5</button>
+      <div>
+        <button onClick={increaseByHandler}>IncreaseBy 10</button>
+        <button onClick={decreaseByHandler}>DecreaseBy 10</button>
       </div>
       <button onClick={toggleCounterHandler}>Toggle Counter</button>
     </main>
