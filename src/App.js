@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 
 function App() {
 
-  const iscartopen = useSelector( state => state.cart.iscartopen )
+  const iscartopen = useSelector( state => state.cart.isCartOpen )
 
   return (
     <Layout>
