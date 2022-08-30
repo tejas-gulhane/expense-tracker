@@ -3,13 +3,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import ExpenseForm from "../expensse/ExpenseForm";
 import { authActions } from "../store/auth-reducer";
+import { themeaction } from "../store/themeReducer";
 
 const WelcomePage = (props) => {
 
   const dispatch = useDispatch();
   const userIdToken = useSelector(state=>state.auth.idToken);
   const isEmailVerified = useSelector(state=>state.auth.isEmailVerified);
-  const APIkey = useSelector(state=>state.auth.apiKey);
+ const APIkey =useSelector(state => state.auth.APIkey)
+  const ispremiumclicked= useSelector( state => state.premium.premium )
+  const expenses = useSelector(state=>state.expense.expenses);
+  const totalExpense = Object.keys(expenses).reduce((p , key)=> {return p + Number(expenses[key].cost)},0);
+  const userEmail = useSelector((state)=>state.auth.email);
+  const cleanUserEmail = userEmail.replace(/[^a-zA-Z0-9 ]/g, '');
+  const [istheme ,setistheme] = useState(false)
 
   useEffect(() => {
     fetch(
@@ -58,15 +65,38 @@ const WelcomePage = (props) => {
   };
 
   const logoutClickHandler = () => {
-
-    // authCtx.logout();
     dispatch(authActions.logout())
+  };
+
+  const togglethemehandler =() =>{
+    // dispatch(themeaction.updatetheme(true))
+    dispatch(themeaction.updatepremium(true))
+  }
+
+  const downlodExpClickHandler = () => {
+
+    let csv = "id,cost,catagory,description\n";
+    Object.keys(expenses).forEach((item) => {
+      csv += `${item},${expenses[item].cost},${expenses[item].catagory},${expenses[item].description}\n`;
+    });
+
+    const downloadLink = document.createElement("a");
+    const blob = new Blob(["\ufeff", csv]);
+    const url = URL.createObjectURL(blob);
+    downloadLink.href = url;
+    downloadLink.download = `${cleanUserEmail}-Expenses.csv`;
+
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
   };
 
   return (
     <Fragment>
       <Fragment>
         <h1>Welcome</h1>
+        { totalExpense>10000 && <button onClick={togglethemehandler}>Activate Premium</button> }
+
         <button onClick={logoutClickHandler}>Log Out</button>
         {!editprofile && (
           <button
@@ -82,6 +112,8 @@ const WelcomePage = (props) => {
         ) : (
           <p>Email Verified</p>
         )}
+
+        <button onClick={downlodExpClickHandler}>Download Expense As CSV</button>
       </Fragment>
       <div>
         <ExpenseForm />

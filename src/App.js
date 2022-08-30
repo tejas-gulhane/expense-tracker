@@ -7,18 +7,17 @@ import Welcome from './components/pages/Welcome';
 import {Routes ,Route , Navigate} from 'react-router-dom'
 import ForgotPassword from './components/pages/ForgotPassword';
 import { useSelector } from 'react-redux/es/hooks/useSelector';
+import { themeaction } from './components/store/themeReducer';
 
 function App() {
   const [loginsucess ,setloginsucess ] = useState(false)
+  const istheme =useSelector( state => state.premium.premium)
 
   const isAuth = useSelector(state=>state.auth.isAuthenticated);
   return (
-    <div className="App">
+    <div className={istheme ? "AppDark" : "App"}>
       <h1>Expense Tracker App</h1>
-      {/* {!isAuth && <Navigate to={'/homepage'}/>}
-      {isAuth && <Navigate to={'/welcome'}/>} */}
-     {/* <HomePage /> */}
-
+   
       <Routes>
         <Route exact path='/welcome' element={<Welcome/>}/>
         <Route exact path='/' element={<HomePage/>}/>

@@ -14,9 +14,9 @@ const HomePage = () => {
 
   return (
     <>
-
+     
      <AuthForm /> 
-       {/* { isLoggedIn && <Welcome /> } */}
+  
 
     </>
   )

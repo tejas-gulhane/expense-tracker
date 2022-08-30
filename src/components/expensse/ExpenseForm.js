@@ -15,21 +15,22 @@ const ExpenseForm = (props) => {
 
   const expenses = useSelector(state=>state.expense.expenses)
 
-  // useEffect(() => {
-  //   fetch(
-  //     `https://expense-tracker-bd2b2-default-rtdb.firebaseio.com/expenses.json`,
-  //     {
-  //       method: "GET",
-  //       headers: {
-  //         "Content-type": "application/json",
-  //       },
-  //     }
-  //   )
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       dispatch(expActions.setExpenses(data));
-  //     });
-  // }, [dispatch]);
+  useEffect(() => {
+    fetch(
+      `https://expense-tracker-bd2b2-default-rtdb.firebaseio.com/expenses.json`,
+      {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        dispatch(expActions.setExpenses(data));
+      });
+  }, [dispatch]);
+  
   const formSubmitHandler = (event) => {
     event.preventDefault();
     const cost = event.target.elements["costInp"].value;
@@ -61,7 +62,7 @@ const ExpenseForm = (props) => {
             )
               .then((res) => res.json())
               .then((data) => {
-                // console.log(typeof(data));
+                console.log(data);
                 dispatch(expActions.setExpenses(data));
 
                 event.target.elements["costInp"].value = "";
@@ -148,11 +149,9 @@ const ExpenseForm = (props) => {
       </form>
       <div>
         <ul>
-          {/* {expenses.map((item) => (
-            <li key={item.id}>{`cost: ${item.cost}\tcatagory: ${item.catagory}\tdescription: ${item.description}`}</li>
-          ))} */}
+         
           {
-           Object.keys(expenses).map((item) => (
+             Object.keys(expenses).map((item) => (
             <li key={item} id={item}>
               {`cost: ${expenses[item].cost}\t catagory: ${expenses[item].catagory}\tdescription: ${expenses[item].description}`}
               <button id={item} onClick={editExpenseClickHandler}>
@@ -162,7 +161,8 @@ const ExpenseForm = (props) => {
                 Delete
               </button>
             </li>
-          ))}
+          ))
+          }
         </ul>
       </div>
     </Fragment>
