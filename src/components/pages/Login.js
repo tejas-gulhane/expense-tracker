@@ -16,7 +16,7 @@ const LogIn = () => {
     } else {
    
         fetch(` https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=
-      AIzaSyDJzFGMehDL_Sv8YBjxCcs1Ox2VjgMBPG4`, {
+        AIzaSyDJzFGMehDL_Sv8YBjxCcs1Ox2VjgMBPG4`, {
         method: 'POST',
               body: JSON.stringify({
                 email: email,
@@ -69,11 +69,13 @@ const LogIn = () => {
         </button>
         <br />
       </form>
+      
       {/* <NavLink to="/signup">
         Don't have an account?
         <br />
         Click heare to Sign Up
       </NavLink>       */}
+
     </Fragment>
   );
 };
