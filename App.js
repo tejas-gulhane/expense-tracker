@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Fragment, useEffect } from "react";
 import { uiActions } from "./components/store/uireducer";
 import Notification from "./components/UI/Notification";
+import { cartActions } from "./components/store/cartReducer";
 
 let isInitial = true;
 
@@ -13,6 +14,7 @@ function App() {
   const isCartOpen = useSelector((state) => state.cart.isCartOpen);
   const cart = useSelector((state) => state.cart);
   const notification = useSelector((state) => state.ui.notification);
+
 
   useEffect(() => {
     const sendCartData = async () => {
@@ -62,6 +64,22 @@ function App() {
       );
     });
   }, [cart, dispatch]);
+
+const fetchdata = async () => {
+  const response = await fetch(`https://expense-tracker-62dd0-default-rtdb.firebaseio.com/cart.json`)
+  const data = await response.json()
+  console.log(data)
+  
+  dispatch(cartActions.getcartonrefresh({
+    items: data.items ? data.items : [],
+    totalItems:data.totalItems ? data.totalItems : 0
+  }))
+}
+
+
+  useEffect(()=>{fetchdata()},[dispatch])
+
+   
 
   return (
     <Fragment>
